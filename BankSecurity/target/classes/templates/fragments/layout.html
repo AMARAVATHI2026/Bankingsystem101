@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title th:text="${pageTitle != null ? pageTitle + ' — BankSecurity' : 'BankSecurity'}">BankSecurity</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>"/>
+</head>
+<body>
+
+<!-- ── SIDEBAR ───────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">🏦</div>
+    <h1>BankSecurity</h1>
+    <p>Secure Banking</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a th:href="@{/dashboard}"
+       th:classappend="${activePage == 'dashboard'} ? 'active' : ''"
+       class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Dashboard</span>
+    </a>
+    <a th:href="@{/transactions}"
+       th:classappend="${activePage == 'transactions'} ? 'active' : ''"
+       class="nav-item">
+      <span class="nav-icon">📋</span>
+      <span>Transactions</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:12px">Banking</div>
+    <a th:href="@{/deposit}"
+       th:classappend="${activePage == 'deposit'} ? 'active' : ''"
+       class="nav-item">
+      <span class="nav-icon">💳</span>
+      <span>Deposit</span>
+    </a>
+    <a th:href="@{/withdraw}"
+       th:classappend="${activePage == 'withdraw'} ? 'active' : ''"
+       class="nav-item">
+      <span class="nav-icon">🏧</span>
+      <span>Withdraw</span>
+    </a>
+    <a th:href="@{/transfer}"
+       th:classappend="${activePage == 'transfer'} ? 'active' : ''"
+       class="nav-item">
+      <span class="nav-icon">↔️</span>
+      <span>Transfer</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:12px">Account</div>
+    <a th:href="@{/accounts/new}"
+       th:classappend="${activePage == 'account-new'} ? 'active' : ''"
+       class="nav-item">
+      <span class="nav-icon">➕</span>
+      <span>New Account</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="user-avatar"
+           th:text="${user != null ? user.name.substring(0,1).toUpperCase() : 'U'}">U</div>
+      <div class="user-chip-info">
+        <p th:text="${user != null ? user.name : 'User'}">User</p>
+        <span th:text="${user != null ? user.email : ''}">user@bank.com</span>
+      </div>
+    </div>
+    <a th:href="@{/logout}" class="logout-btn">
+      <span>🚪</span><span>Sign Out</span>
+    </a>
+  </div>
+</aside>
+
+<!-- ── MAIN CONTENT placeholder — each page injects its own body ── -->
+</body>
+</html>

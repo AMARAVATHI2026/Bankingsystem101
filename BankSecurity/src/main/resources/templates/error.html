@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Error — BankSecurity</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="auth-wrapper">
+  <div class="auth-card" style="text-align:center">
+    <div style="font-size:56px;margin-bottom:16px">⚠️</div>
+    <h1 style="font-family:'Playfair Display',serif;color:var(--white);margin-bottom:8px"
+        th:text="${status != null ? status : 'Error'}">Error</h1>
+    <p style="color:var(--gray-400);margin-bottom:24px"
+       th:text="${message != null ? message : 'Something went wrong. Please try again.'}">
+      Something went wrong.
+    </p>
+    <a th:href="@{/dashboard}" class="btn btn-gold">← Back to Dashboard</a>
+  </div>
+</div>
+</body>
+</html>

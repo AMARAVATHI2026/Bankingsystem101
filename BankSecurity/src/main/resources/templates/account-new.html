@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Account — BankSecurity</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>"/>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">🏦</div>
+    <h1>BankSecurity</h1>
+    <p>Secure Banking</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a th:href="@{/dashboard}" class="nav-item"><span class="nav-icon">🏠</span><span>Dashboard</span></a>
+    <a th:href="@{/transactions}" class="nav-item"><span class="nav-icon">📋</span><span>Transactions</span></a>
+    <div class="nav-section-label" style="margin-top:12px">Banking</div>
+    <a th:href="@{/deposit}" class="nav-item"><span class="nav-icon">💳</span><span>Deposit</span></a>
+    <a th:href="@{/withdraw}" class="nav-item"><span class="nav-icon">🏧</span><span>Withdraw</span></a>
+    <a th:href="@{/transfer}" class="nav-item"><span class="nav-icon">↔️</span><span>Transfer</span></a>
+    <div class="nav-section-label" style="margin-top:12px">Account</div>
+    <a th:href="@{/accounts/new}" class="nav-item active"><span class="nav-icon">➕</span><span>New Account</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <a th:href="@{/logout}" class="logout-btn"><span>🚪</span><span>Sign Out</span></a>
+  </div>
+</aside>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a th:href="@{/dashboard}">Dashboard</a> › <span>New Account</span>
+    </div>
+    <h2>Open a New Account</h2>
+    <p>Choose an account type that suits your needs.</p>
+  </div>
+
+  <div class="grid-2" style="align-items:start;max-width:860px">
+    <div class="card">
+      <h3 class="section-title" style="margin-bottom:22px">➕ Account Details</h3>
+
+      <form th:action="@{/accounts/new}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="form-group">
+          <label class="form-label">Account Type</label>
+          <select name="accountType" class="form-control" required>
+            <option value="SAVINGS">Savings Account</option>
+            <option value="CURRENT">Current Account</option>
+            <option value="FIXED_DEPOSIT">Fixed Deposit</option>
+          </select>
+        </div>
+
+        <p class="form-hint" style="margin-bottom:16px">
+          An account number will be auto-generated. Initial balance is ₹0.
+        </p>
+
+        <button type="submit" class="btn btn-gold btn-full btn-lg">
+          Open Account →
+        </button>
+      </form>
+    </div>
+
+    <div>
+      <div class="card" style="background:var(--navy-900);margin-bottom:14px">
+        <h4 style="color:#4ade80;font-size:13px;margin-bottom:10px">🟢 Savings Account</h4>
+        <p style="color:var(--gray-400);font-size:13px">Best for individuals. Earn interest on balance. Ideal for day-to-day expenses and savings goals.</p>
+      </div>
+      <div class="card" style="background:var(--navy-900);margin-bottom:14px">
+        <h4 style="color:#60a5fa;font-size:13px;margin-bottom:10px">🔵 Current Account</h4>
+        <p style="color:var(--gray-400);font-size:13px">Designed for businesses. No transaction limits. Suitable for frequent and large-volume operations.</p>
+      </div>
+      <div class="card" style="background:var(--navy-900)">
+        <h4 style="color:var(--gold-400);font-size:13px;margin-bottom:10px">🥇 Fixed Deposit</h4>
+        <p style="color:var(--gray-400);font-size:13px">Lock funds for a fixed term at higher interest rates. Best for long-term wealth management.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

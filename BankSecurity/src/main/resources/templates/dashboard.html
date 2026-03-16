@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — BankSecurity</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">🏦</div>
+    <h1>BankSecurity</h1>
+    <p>Secure Banking</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a th:href="@{/dashboard}" class="nav-item active">
+      <span class="nav-icon">🏠</span><span>Dashboard</span>
+    </a>
+    <a th:href="@{/transactions}" class="nav-item">
+      <span class="nav-icon">📋</span><span>Transactions</span>
+    </a>
+    <div class="nav-section-label" style="margin-top:12px">Banking</div>
+    <a th:href="@{/deposit}" class="nav-item">
+      <span class="nav-icon">💳</span><span>Deposit</span>
+    </a>
+    <a th:href="@{/withdraw}" class="nav-item">
+      <span class="nav-icon">🏧</span><span>Withdraw</span>
+    </a>
+    <a th:href="@{/transfer}" class="nav-item">
+      <span class="nav-icon">↔️</span><span>Transfer</span>
+    </a>
+    <div class="nav-section-label" style="margin-top:12px">Account</div>
+    <a th:href="@{/accounts/new}" class="nav-item">
+      <span class="nav-icon">➕</span><span>New Account</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="user-avatar" th:text="${user.name.substring(0,1).toUpperCase()}">U</div>
+      <div class="user-chip-info">
+        <p th:text="${user.name}">User</p>
+        <span th:text="${user.email}">email</span>
+      </div>
+    </div>
+    <a th:href="@{/logout}" class="logout-btn">
+      <span>🚪</span><span>Sign Out</span>
+    </a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <div class="page-header">
+    <div class="flex-between">
+      <div>
+        <h2 th:text="'Good day, ' + ${user.name} + '!'">Welcome!</h2>
+        <p>Here's an overview of your banking activity.</p>
+      </div>
+      <div style="display:flex;gap:10px">
+        <a th:href="@{/accounts/new}" class="btn btn-outline btn-sm">+ New Account</a>
+        <a th:href="@{/deposit}" class="btn btn-gold btn-sm">Quick Deposit</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flash messages -->
+  <div th:if="${successMsg}" class="alert alert-success">
+    <span>✅</span><span th:text="${successMsg}">Success</span>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon gold-bg">💰</div>
+      <div class="stat-label">Total Balance</div>
+      <div class="stat-value gold">₹<span th:text="${#numbers.formatDecimal(totalBalance, 1, 2)}">0.00</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue-bg">🏦</div>
+      <div class="stat-label">Accounts</div>
+      <div class="stat-value" th:text="${accounts.size()}">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green-bg">📈</div>
+      <div class="stat-label">Recent Transactions</div>
+      <div class="stat-value" th:text="${recentTransactions.size()}">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple-bg">🛡️</div>
+      <div class="stat-label">Security</div>
+      <div class="stat-value" style="font-size:15px;color:#c084fc">Active</div>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-actions">
+    <a th:href="@{/deposit}" class="quick-action-btn">
+      <div class="icon-wrap" style="background:rgba(34,197,94,.12);color:#4ade80">💳</div>
+      <span>Deposit</span>
+    </a>
+    <a th:href="@{/withdraw}" class="quick-action-btn">
+      <div class="icon-wrap" style="background:rgba(239,68,68,.12);color:#f87171">🏧</div>
+      <span>Withdraw</span>
+    </a>
+    <a th:href="@{/transfer}" class="quick-action-btn">
+      <div class="icon-wrap" style="background:rgba(59,130,246,.12);color:#60a5fa">↔️</div>
+      <span>Transfer</span>
+    </a>
+    <a th:href="@{/transactions}" class="quick-action-btn">
+      <div class="icon-wrap" style="background:rgba(168,85,247,.12);color:#c084fc">📋</div>
+      <span>History</span>
+    </a>
+  </div>
+
+  <!-- ACCOUNTS + RECENT TRANSACTIONS GRID -->
+  <div class="grid-2" style="align-items:start">
+
+    <!-- MY ACCOUNTS -->
+    <div>
+      <div class="section-header">
+        <h3 class="section-title">My Accounts</h3>
+        <a th:href="@{/accounts/new}" class="btn btn-ghost btn-sm">+ Add</a>
+      </div>
+
+      <div th:if="${accounts.isEmpty()}" class="card">
+        <div class="empty-state">
+          <div class="empty-icon">🏦</div>
+          <p>No accounts yet.</p>
+          <a th:href="@{/accounts/new}" class="btn btn-gold btn-sm" style="margin-top:14px">Open Account</a>
+        </div>
+      </div>
+
+      <div th:each="acc : ${accounts}" style="margin-bottom:14px">
+        <div class="account-card">
+          <div class="account-card-type" th:text="${acc.accountType}">SAVINGS</div>
+          <div class="account-card-balance">
+            <span>₹</span><span th:text="${#numbers.formatDecimal(acc.balance, 1, 2)}">0.00</span>
+          </div>
+          <div style="font-size:12px;color:var(--gray-500);margin-top:6px">Available Balance</div>
+          <div class="account-card-number" th:text="${acc.accountNumber}">ACC000000000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT TRANSACTIONS -->
+    <div>
+      <div class="section-header">
+        <h3 class="section-title">Recent Activity <small>last 5</small></h3>
+        <a th:href="@{/transactions}" class="btn btn-ghost btn-sm">View All</a>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden">
+        <div th:if="${recentTransactions.isEmpty()}" class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>No transactions yet.</p>
+        </div>
+
+        <table th:unless="${recentTransactions.isEmpty()}">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="tx : ${recentTransactions}">
+              <td>
+                <span th:switch="${tx.type.name()}">
+                  <span th:case="'DEPOSIT'"   class="tx-badge deposit">⬇ Deposit</span>
+                  <span th:case="'WITHDRAWAL'" class="tx-badge withdraw">⬆ Withdraw</span>
+                  <span th:case="'TRANSFER_OUT'" class="tx-badge transfer">→ Transfer Out</span>
+                  <span th:case="'TRANSFER_IN'"  class="tx-badge transfer">← Transfer In</span>
+                </span>
+              </td>
+              <td>
+                <span th:with="isCredit=${tx.type.name() == 'DEPOSIT' or tx.type.name() == 'TRANSFER_IN'}"
+                      th:class="${isCredit} ? 'tx-amount credit' : 'tx-amount debit'"
+                      th:text="${(isCredit ? '+' : '-') + '₹' + #numbers.formatDecimal(tx.amount, 1, 2)}">
+                </span>
+              </td>
+              <td style="color:var(--gray-500);font-size:12px"
+                  th:text="${#temporals.format(tx.date, 'dd MMM, HH:mm')}">--</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

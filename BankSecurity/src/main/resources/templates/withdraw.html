@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdraw — BankSecurity</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>"/>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">🏦</div>
+    <h1>BankSecurity</h1>
+    <p>Secure Banking</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a th:href="@{/dashboard}" class="nav-item"><span class="nav-icon">🏠</span><span>Dashboard</span></a>
+    <a th:href="@{/transactions}" class="nav-item"><span class="nav-icon">📋</span><span>Transactions</span></a>
+    <div class="nav-section-label" style="margin-top:12px">Banking</div>
+    <a th:href="@{/deposit}" class="nav-item"><span class="nav-icon">💳</span><span>Deposit</span></a>
+    <a th:href="@{/withdraw}" class="nav-item active"><span class="nav-icon">🏧</span><span>Withdraw</span></a>
+    <a th:href="@{/transfer}" class="nav-item"><span class="nav-icon">↔️</span><span>Transfer</span></a>
+    <div class="nav-section-label" style="margin-top:12px">Account</div>
+    <a th:href="@{/accounts/new}" class="nav-item"><span class="nav-icon">➕</span><span>New Account</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <a th:href="@{/logout}" class="logout-btn"><span>🚪</span><span>Sign Out</span></a>
+  </div>
+</aside>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a th:href="@{/dashboard}">Dashboard</a> › <span>Withdraw</span>
+    </div>
+    <h2>Withdraw Money</h2>
+    <p>Withdraw funds from your account.</p>
+  </div>
+
+  <div th:if="${successMsg}" class="alert alert-success"><span>✅</span><span th:text="${successMsg}"></span></div>
+  <div th:if="${errorMsg}"   class="alert alert-danger"><span>⚠️</span><span th:text="${errorMsg}"></span></div>
+
+  <div class="grid-2" style="align-items:start;max-width:860px">
+    <div class="card">
+      <h3 class="section-title" style="margin-bottom:22px">🏧 New Withdrawal</h3>
+
+      <form th:action="@{/transaction/withdraw}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="form-group">
+          <label class="form-label">Select Account</label>
+          <select name="accountId" class="form-control" required>
+            <option value="">— Choose account —</option>
+            <option th:each="acc : ${accounts}"
+                    th:value="${acc.id}"
+                    th:text="${acc.accountNumber + ' (' + acc.accountType + ') — ₹' + #numbers.formatDecimal(acc.balance,1,2)}">
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Amount (₹)</label>
+          <input type="number" name="amount" class="form-control"
+                 placeholder="0.00" min="1" step="0.01" required/>
+          <p class="form-hint">Must not exceed available balance.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description (optional)</label>
+          <input type="text" name="description" class="form-control"
+                 placeholder="e.g. ATM withdrawal"/>
+        </div>
+
+        <button type="submit" class="btn btn-full btn-lg"
+                style="background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);margin-top:6px">
+          Withdraw Funds →
+        </button>
+      </form>
+    </div>
+
+    <div class="card" style="background:var(--navy-900)">
+      <h4 style="color:#f87171;margin-bottom:16px;font-size:14px;letter-spacing:.5px">⚠ WITHDRAWAL POLICY</h4>
+      <p style="color:var(--gray-400);font-size:13px;line-height:1.8">
+        • Withdrawal is immediate and irreversible<br/>
+        • Cannot exceed your current balance<br/>
+        • Minimum withdrawal amount: ₹1<br/>
+        • All withdrawals are logged<br/>
+        • Contact support if you face issues
+      </p>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
